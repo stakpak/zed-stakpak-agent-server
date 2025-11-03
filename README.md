@@ -1,6 +1,6 @@
 # Stakpak Agent for Zed
 
-Enterprise-grade DevOps agent with security features and infrastructure code generation capabilities.
+Open-source DevOps agent in Rust with enterprise-grade security.
 
 ## Features
 
