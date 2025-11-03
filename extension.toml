@@ -3,7 +3,7 @@ name = "Stakpak Agent"
 version = "0.1.0"
 schema_version = 1
 authors = ["Stakpak Team <contact@stakpak.dev>"]
-description = "Open-source Agent in Rust. Built with enterprise-grade security for tough DevOps tasks."
+description = "Open-source DevOps agent in Rust with enterprise-grade security."
 repository = "https://github.com/stakpak/zed-stakpak-agent-server"
 
 [agent_servers.stakpak]
