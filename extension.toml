@@ -12,7 +12,7 @@ icon = "icon.svg"
 
 # Environment variables (optional)
 [agent_servers.stakpak.env]
-# STAKPAK_LOG_LEVEL = "info"  # Optional: Add if you want to control logging
+# STAKPAK_API_KEY = "your-api-key"  # Optional: Add if you want to use the API key authentication
 
 # macOS ARM64 (M1/M2/M3/M4 Macs)
 [agent_servers.stakpak.targets.darwin-aarch64]
