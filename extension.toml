@@ -1,6 +1,6 @@
 id = "stakpak"
 name = "Stakpak Agent"
-version = "0.1.0"
+version = "0.1.1"
 schema_version = 1
 authors = ["Stakpak Team <contact@stakpak.dev>"]
 description = "Open-source DevOps agent in Rust with enterprise-grade security."
@@ -16,29 +16,29 @@ icon = "icon.svg"
 
 # macOS ARM64 (M1/M2/M3/M4 Macs)
 [agent_servers.stakpak.targets.darwin-aarch64]
-archive = "https://github.com/stakpak/agent/releases/download/v0.2.66/stakpak-darwin-aarch64.tar.gz"
+archive = "https://github.com/stakpak/agent/releases/download/v0.2.67/stakpak-darwin-aarch64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
-sha256 = "bd7c27d39bea6c344e3ef038606079c283870b3b9ca9f29bd000c1a4987453c3"
+sha256 = "f6d6818c6bc5b1db3066fc92d70646aed1cebc5be6785e68aa937fd8ae7ad3a5"
 
 # macOS x86_64 (Intel Macs)
 [agent_servers.stakpak.targets.darwin-x86_64]
-archive = "https://github.com/stakpak/agent/releases/download/v0.2.66/stakpak-darwin-x86_64.tar.gz"
+archive = "https://github.com/stakpak/agent/releases/download/v0.2.67/stakpak-darwin-x86_64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
-sha256 = "30dc49c9c337cd03f691bc21e4e64e24c0de3220da3e7203a05232eb246331d8"
+sha256 = "7f76ab9ef60282c5a2ad21e45e611e798bddcafcb905287201e477ee4ac7fee4"
 
 # Linux x86_64
 [agent_servers.stakpak.targets.linux-x86_64]
-archive = "https://github.com/stakpak/agent/releases/download/v0.2.66/stakpak-linux-x86_64.tar.gz"
+archive = "https://github.com/stakpak/agent/releases/download/v0.2.67/stakpak-linux-x86_64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
-sha256 = "8210bd81321b2792e8fdde37ff26b1dc65b17c4dfac9b01fda4c07f9b51a3c45"
+sha256 = "c2cbe912d2abe561af93945cca4b0edf554af442cc3cc3f7fa85c85b6a1c1e94"
 
 # Windows x86_64
 [agent_servers.stakpak.targets.windows-x86_64]
-archive = "https://github.com/stakpak/agent/releases/download/v0.2.66/stakpak-windows-x86_64.zip"
+archive = "https://github.com/stakpak/agent/releases/download/v0.2.67/stakpak-windows-x86_64.zip"
 cmd = "./stakpak.exe"
 args = ["acp"]
-sha256 = "2c8d493a63703b18e68ebb0e7a70537b392de4f31b31179a50794cac19ab1277"
+sha256 = "40edbc13031404df4b0f2b098219108d687883bae0db34054bd79dba27bfd4d8"
 
