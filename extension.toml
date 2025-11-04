@@ -1,5 +1,5 @@
 id = "stakpak"
-name = "Stakpak Agent"
+name = "Stakpak"
 version = "0.1.1"
 schema_version = 1
 authors = ["Stakpak Team <contact@stakpak.dev>"]
