@@ -1,0 +1,157 @@
+name: Update Agent Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Agent version (e.g., v0.2.67). Leave empty to use latest release.'
+        required: false
+        type: string
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install tomlkit
+
+      - name: Get latest release version
+        id: get_version
+        run: |
+          if [ -z "${{ github.event.inputs.version }}" ]; then
+            VERSION=$(curl -s https://api.github.com/repos/stakpak/agent/releases/latest | grep -oP '"tag_name": "\K[^"]+')
+            echo "Using latest release: $VERSION"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            echo "Using specified version: $VERSION"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Calculate SHA256 hashes
+        id: calculate_hashes
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          
+          echo "Downloading and calculating SHA256 hashes..."
+          
+          # macOS ARM64
+          DARWIN_ARM64_SHA=$(curl -L -s "https://github.com/stakpak/agent/releases/download/${VERSION}/stakpak-darwin-aarch64.tar.gz" | shasum -a 256 | awk '{print $1}')
+          echo "darwin_arm64_sha=$DARWIN_ARM64_SHA" >> $GITHUB_OUTPUT
+          echo "✓ macOS ARM64: $DARWIN_ARM64_SHA"
+          
+          # macOS x86_64
+          DARWIN_X86_64_SHA=$(curl -L -s "https://github.com/stakpak/agent/releases/download/${VERSION}/stakpak-darwin-x86_64.tar.gz" | shasum -a 256 | awk '{print $1}')
+          echo "darwin_x86_64_sha=$DARWIN_X86_64_SHA" >> $GITHUB_OUTPUT
+          echo "✓ macOS x86_64: $DARWIN_X86_64_SHA"
+          
+          # Linux x86_64
+          LINUX_X86_64_SHA=$(curl -L -s "https://github.com/stakpak/agent/releases/download/${VERSION}/stakpak-linux-x86_64.tar.gz" | shasum -a 256 | awk '{print $1}')
+          echo "linux_x86_64_sha=$LINUX_X86_64_SHA" >> $GITHUB_OUTPUT
+          echo "✓ Linux x86_64: $LINUX_X86_64_SHA"
+          
+          # Windows x86_64
+          WINDOWS_X86_64_SHA=$(curl -L -s "https://github.com/stakpak/agent/releases/download/${VERSION}/stakpak-windows-x86_64.zip" | shasum -a 256 | awk '{print $1}')
+          echo "windows_x86_64_sha=$WINDOWS_X86_64_SHA" >> $GITHUB_OUTPUT
+          echo "✓ Windows x86_64: $WINDOWS_X86_64_SHA"
+
+      - name: Update extension.toml
+        env:
+          AGENT_VERSION: ${{ steps.get_version.outputs.version }}
+          DARWIN_ARM64_SHA: ${{ steps.calculate_hashes.outputs.darwin_arm64_sha }}
+          DARWIN_X86_64_SHA: ${{ steps.calculate_hashes.outputs.darwin_x86_64_sha }}
+          LINUX_X86_64_SHA: ${{ steps.calculate_hashes.outputs.linux_x86_64_sha }}
+          WINDOWS_X86_64_SHA: ${{ steps.calculate_hashes.outputs.windows_x86_64_sha }}
+        run: |
+          python3 << 'EOF'
+          import tomlkit
+          import os
+          
+          # Read current extension.toml
+          with open('extension.toml', 'r') as f:
+              content = f.read()
+              config = tomlkit.parse(content)
+          
+          # Get current extension version and increment patch
+          current_version = str(config['version'])
+          major, minor, patch = map(int, current_version.split('.'))
+          new_version = f"{major}.{minor}.{patch + 1}"
+          
+          print(f"Updating extension version: {current_version} -> {new_version}")
+          config['version'] = new_version
+          
+          # Update agent version in archive URLs
+          agent_version = os.environ['AGENT_VERSION']
+          print(f"Updating agent version to: {agent_version}")
+          
+          # Update all archive URLs and SHA256 hashes
+          targets = config['agent_servers']['stakpak']['targets']
+          
+          platform_mapping = {
+              'darwin-aarch64': ('DARWIN_ARM64_SHA', 'macOS ARM64'),
+              'darwin-x86_64': ('DARWIN_X86_64_SHA', 'macOS x86_64'),
+              'linux-x86_64': ('LINUX_X86_64_SHA', 'Linux x86_64'),
+              'windows-x86_64': ('WINDOWS_X86_64_SHA', 'Windows x86_64'),
+          }
+          
+          for platform in platform_mapping:
+              if platform in targets:
+                  env_key, platform_name = platform_mapping[platform]
+                  
+                  # Update archive URL
+                  current_url = str(targets[platform]['archive'])
+                  if '/releases/download/' in current_url:
+                      parts = current_url.split('/releases/download/')
+                      filename = parts[1].split('/', 1)[1]
+                      new_url = f"{parts[0]}/releases/download/{agent_version}/{filename}"
+                      targets[platform]['archive'] = new_url
+                      print(f"✓ Updated {platform_name} URL")
+                  
+                  # Update SHA256
+                  targets[platform]['sha256'] = os.environ[env_key]
+                  print(f"✓ Updated {platform_name} SHA256")
+          
+          # Write updated config (preserves formatting)
+          with open('extension.toml', 'w') as f:
+              f.write(tomlkit.dumps(config))
+          
+          print("✓ Successfully updated extension.toml")
+          EOF
+
+      - name: Verify changes
+        run: |
+          echo "=== Updated extension.toml ==="
+          cat extension.toml
+          echo ""
+          echo "=== Git diff ==="
+          git diff extension.toml || true
+
+      - name: Commit and push changes
+        env:
+          AGENT_VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add extension.toml
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          NEW_EXT_VERSION=$(grep -E '^version = ' extension.toml | sed -E 's/version = "([^"]+)"/\1/')
+          git commit -m "Update agent to $AGENT_VERSION (extension v$NEW_EXT_VERSION)"
+          git push
