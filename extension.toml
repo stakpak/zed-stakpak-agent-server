@@ -8,7 +8,7 @@ repository = "https://github.com/stakpak/zed-stakpak-agent-server"
 
 [agent_servers.stakpak]
 name = "Stakpak"
-icon = "icon.svg"
+icon = "./icons/stakpak.svg"
 
 # Environment variables (optional)
 [agent_servers.stakpak.env]
