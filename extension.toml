@@ -1,6 +1,6 @@
 id = "stakpak"
 name = "Stakpak"
-version = "0.1.5"
+version = "0.1.6"
 schema_version = 1
 authors = ["Stakpak Team <contact@stakpak.dev>"]
 description = "Open-source DevOps agent in Rust with enterprise-grade security."
