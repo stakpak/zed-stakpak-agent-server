@@ -19,26 +19,22 @@ icon = "./icons/stakpak.svg"
 archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-darwin-aarch64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
-sha256 = "f6d6818c6bc5b1db3066fc92d70646aed1cebc5be6785e68aa937fd8ae7ad3a5"
 
 # macOS x86_64 (Intel Macs)
 [agent_servers.stakpak.targets.darwin-x86_64]
 archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-darwin-x86_64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
-sha256 = "7f76ab9ef60282c5a2ad21e45e611e798bddcafcb905287201e477ee4ac7fee4"
 
 # Linux x86_64
 [agent_servers.stakpak.targets.linux-x86_64]
 archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-linux-x86_64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
-sha256 = "c2cbe912d2abe561af93945cca4b0edf554af442cc3cc3f7fa85c85b6a1c1e94"
 
 # Windows x86_64
 [agent_servers.stakpak.targets.windows-x86_64]
 archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-windows-x86_64.zip"
 cmd = "./stakpak.exe"
 args = ["acp"]
-sha256 = "40edbc13031404df4b0f2b098219108d687883bae0db34054bd79dba27bfd4d8"
 
