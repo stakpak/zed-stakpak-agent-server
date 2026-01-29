@@ -1,6 +1,6 @@
 id = "stakpak"
 name = "Stakpak"
-version = "0.1.7"
+version = "0.1.8"
 schema_version = 1
 authors = ["Stakpak Team <contact@stakpak.dev>"]
 description = "Open-source DevOps agent in Rust with enterprise-grade security."
@@ -16,28 +16,28 @@ icon = "./icons/stakpak.svg"
 
 # macOS ARM64 (M1/M2/M3/M4 Macs)
 [agent_servers.stakpak.targets.darwin-aarch64]
-archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-darwin-aarch64.tar.gz"
+archive = "https://github.com/stakpak/agent/releases/download/v0.3.16/stakpak-darwin-aarch64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
 
 # macOS x86_64 (Intel Macs)
 sha256 = "9246449a48fc09a72e2e30baa95e061ac362837a9f42b3bcd95c87844e0ef311"
 [agent_servers.stakpak.targets.darwin-x86_64]
-archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-darwin-x86_64.tar.gz"
+archive = "https://github.com/stakpak/agent/releases/download/v0.3.16/stakpak-darwin-x86_64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
 
 # Linux x86_64
 sha256 = "c1e2aa295f5253e3e3e7018b1d37982f2b823093316625320034221dd1d93562"
 [agent_servers.stakpak.targets.linux-x86_64]
-archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-linux-x86_64.tar.gz"
+archive = "https://github.com/stakpak/agent/releases/download/v0.3.16/stakpak-linux-x86_64.tar.gz"
 cmd = "./stakpak"
 args = ["acp"]
 
 # Windows x86_64
 sha256 = "77af77896e00851ec012d1c16b4b3371368d18915d45aee0b352e56ad44b8d89"
 [agent_servers.stakpak.targets.windows-x86_64]
-archive = "https://github.com/stakpak/agent/releases/latest/download/stakpak-windows-x86_64.zip"
+archive = "https://github.com/stakpak/agent/releases/download/v0.3.16/stakpak-windows-x86_64.zip"
 cmd = "./stakpak.exe"
 args = ["acp"]
 sha256 = "69e468b0663bc46569fc6324a5fa8a0cafd906afba07489e6cecc962790d7b40"
